@@ -1,17 +1,17 @@
 FROM maven:3.8.4-openjdk-17
 
 # Google Chrome
-ARG CHROME_VERSION=99.0.4844.51-1
+ARG CHROME_VERSION=100.0.4896.60-1
 ADD google-chrome.repo /etc/yum.repos.d/google-chrome.repo
 RUN microdnf install -y google-chrome-stable-$CHROME_VERSION \
 	&& sed -i 's/"$HERE\/chrome"/"$HERE\/chrome" --no-sandbox/g' /opt/google/chrome/google-chrome
 
 # AWS CLI
-RUN sudo apt update
-RUN	sudo apt install awscli
+RUN microdnf install python3-pip
+RUN	pip3 install awscli --upgrade --user
 
 # ChromeDriver
-ARG CHROME_DRIVER_VERSION=99.0.4844.51
+ARG CHROME_DRIVER_VERSION=100.0.4896.60
 RUN microdnf install -y unzip \
 	&& curl -s -o /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip \
 	&& unzip /tmp/chromedriver.zip -d /opt \
